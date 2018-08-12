@@ -184,18 +184,16 @@ namespace BELLE_NAMESPACE
     }
   };
 
-#if defined(JUCE_VERSION)
-  //Inherit native path base classes.
-  class Path : public Value::Base, public juce::Path
-#else
-  ///Vector path object
   class Path : public Value::Base
-#endif
   {
     Array<Instruction> Instructions;
     Array<PolygonShape> CachedOutline;
     Box BoundingBox;
 
+#if defined(JUCE_VERSION)
+    juce::Path JUCEPath;
+    friend struct JUCE;
+#endif
     virtual void VtableEmit();
 
     public:
@@ -408,14 +406,14 @@ namespace BELLE_NAMESPACE
       //Do work for native path base classes.
 #if defined(JUCE_VERSION)
       if(i.IsMove())
-        startNewSubPath((float)e.x, (float)e.y);
+        JUCEPath.startNewSubPath((float)e.x, (float)e.y);
       else if(i.IsLine())
-        lineTo((float)e.x, (float)e.y);
+        JUCEPath.lineTo((float)e.x, (float)e.y);
       else if(i.IsCubic())
-        cubicTo((float)c1.x, (float)c1.y, (float)c2.x, (float)c2.y,
+        JUCEPath.cubicTo((float)c1.x, (float)c1.y, (float)c2.x, (float)c2.y,
           (float)e.x, (float)e.y);
       else if(i.IsClosing())
-        closeSubPath();
+        JUCEPath.closeSubPath();
 #endif
     }
 

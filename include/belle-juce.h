@@ -246,7 +246,7 @@ namespace BELLE_NAMESPACE
           (uint8)(fc.G * 255.f), (uint8)(fc.B * 255.f), fc.A));
 
         //Fill the path.
-        g->fillPath(p, ToViewport);
+        g->fillPath(p.JUCEPath, ToViewport);
       }
 
       //Stroke path if necessary.
@@ -263,7 +263,7 @@ namespace BELLE_NAMESPACE
           ToViewport.mat01).Mag() / Sqrt(2.0);
 
         //Stroke the path.
-        g->strokePath(p, juce::PathStrokeType((float)ScaledStrokeWidth),
+        g->strokePath(p.JUCEPath, juce::PathStrokeType((float)ScaledStrokeWidth),
           ToViewport);
       }
     }
