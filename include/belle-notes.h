@@ -62,7 +62,7 @@ Vector AccumulateMultichord(Music::ConstNode Island, Value& MultichordClusters)
 void AddAccidentalToListIfNecessary(Music::ConstNode Island,
   const Value& NoteInfo, Value& AccidentalList)
 {
-  if(ShouldEmitAccidental(Island, NoteInfo["StaffPosition"]))
+  if(ShouldEmitAccidental(Island, NoteInfo["StaffPosition"], NoteInfo["Accidental"]))
     AccidentalList.Add()["Accidental"]  = NoteInfo["Accidental"],
       AccidentalList.z()["StaffPosition"] = NoteInfo["StaffPosition"],
       AccidentalList.z()["Note"] = NoteInfo["Note"];
@@ -280,10 +280,11 @@ Value RawAccidentalListFromChordClusters(Music::ConstNode Island,
 }
 
 ///Returns whether an accidental at a given staff position should be emitted.
-bool ShouldEmitAccidental(Music::ConstNode Island, Value StaffPosition)
+bool ShouldEmitAccidental(Music::ConstNode Island, Value StaffPosition,
+  mica::Concept Accidental)
 {
   return Island->GetState("PartState", "Chord",
-    "AccidentalsToEmit")[StaffPosition].AsBoolean();
+    "AccidentalsToEmit")[StaffPosition][Accidental].AsBoolean();
 }
 
 /**Returns a staff-position list from a set of multichord clusters. The stem
@@ -354,7 +355,8 @@ Vector PlaceMultichordNextToExisting(Pointer<Stamp> IslandStamp,
 Value Property(Music::ConstNode Island, String Name);
 Value RawAccidentalListFromChordClusters(Music::ConstNode Island,
   const Value& MultichordClusters);
-bool ShouldEmitAccidental(Music::ConstNode Island, Value StaffPosition);
+bool ShouldEmitAccidental(Music::ConstNode Island, Value StaffPosition,
+  mica::Concept Accidental);
 Value  StaffPositionListFromChordClusters(const Value& MultichordClusters);
 Pointer<Path> StemlessNotehead(Music::ConstNode Island, Value& Note,
   mica::Concept Symbol);

@@ -44,7 +44,7 @@ Value NoteheadInformationForChord(Music::ConstNode Token, Value MultichordInfo);
 Value NoteheadInformationForNote(Music::ConstNode Note, Value MultichordInfo);
 void EngraveMultichordBrace(Music::ConstNode Island, number MaxOffset);
 mica::Concept PartStateAccidentalForStaffPosition(const Value& PartState,
-  count StaffPosition);
+  count StaffPosition, mica::Concept Accidental);
 mica::Concept PitchOfNote(Music::ConstNode x);
 mica::Concept DiatonicPitchOfNote(Music::ConstNode x);
 mica::Concept AccidentalOfNote(Music::ConstNode x);
@@ -305,12 +305,13 @@ bool IsChordPair(Music::ConstNode First, Music::ConstNode Second)
 }
 
 mica::Concept PartStateAccidentalForStaffPosition(const Value& PartState,
-  count StaffPosition)
+  count StaffPosition, mica::Concept Accidental)
 {
   const Value& Altered = PartState["Accidentals"]["Altered"];
   mica::Concept Result;
   for(count i = Altered.n() - 1; i >= 0 and mica::undefined(Result); i--)
     if(Altered[i]["StaffPosition"].AsCount() == StaffPosition and
+      (Accidental == mica::Undefined || Accidental == (mica::Concept)Altered[i]["Accidental"]) and
       Altered[i]["MeasuresAgo"].AsCount() == 0)
         Result = Altered[i]["Accidental"];
   return Result;
@@ -320,7 +321,8 @@ Value NoteheadInformationForNote(Music::ConstNode Note, Value MultichordInfo)
 {
   Value NoteInfo = MultichordInfo;
   NoteInfo["Accidental"]    = PartStateAccidentalForStaffPosition(
-    PartStateOfChord(ChordOfNote(Note)), StaffPositionOfNote(Note));
+    PartStateOfChord(ChordOfNote(Note)), StaffPositionOfNote(Note),
+    AccidentalOfNote(Note));
   NoteInfo["Chord"]         = ChordOfNote(Note);
   NoteInfo["DiatonicPitch"] = DiatonicPitchOfNote(Note);
   NoteInfo["Dots"]          = DurationDots(IntrinsicDurationOfNote(Note));

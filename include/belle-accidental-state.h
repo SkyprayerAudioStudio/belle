@@ -116,6 +116,9 @@ void AccidentalStateAssumeAndAccumulateAccidentalStateForPart(
     if(AccidentalsToEmit.IsNil())
       AccidentalsToEmit.NewTree();
 
+    if(AccidentalsToEmit[StaffPosition].IsNil())
+      AccidentalsToEmit[StaffPosition].NewTree();
+
     //Determine whether pitch should have its accidental emitted.
     bool Emit = AccidentalStateShouldAccidentalBeEmitted(
       LabelStateValue["PartState"], Accidental, DiatonicPitch, StaffPosition);
@@ -124,10 +127,10 @@ void AccidentalStateAssumeAndAccumulateAccidentalStateForPart(
     if(OverrideInEffect)
       Emit = OverrideVisible;
 
-    if(Emit && AccidentalsToEmit[StaffPosition].IsNil())
+    if(Emit && AccidentalsToEmit[StaffPosition][Accidental].IsNil())
     {
       //Have the chord engraver emit the accidental.
-      AccidentalsToEmit[StaffPosition] = true;
+      AccidentalsToEmit[StaffPosition][Accidental] = true;
 
       //Get references to the altered accidental data.
       Value& Altered =
@@ -155,7 +158,7 @@ void AccidentalStateAssumeAndAccumulateAccidentalStateForPart(
     /*If the note was tied, silence the accidental but allow the state to
     persist for ties across measures.*/
     if(Notes[i]->Previous(MusicLabel(mica::Tie)))
-      AccidentalsToEmit[StaffPosition].Clear();
+      AccidentalsToEmit[StaffPosition][Accidental].Clear();
 
     //Flush the accidentals-to-emit state.
     LabelStateValue["PartState"]["Chord"]["AccidentalsToEmit"] =
