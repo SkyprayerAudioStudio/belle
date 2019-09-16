@@ -50,6 +50,7 @@ namespace PRIM_NAMESPACE { namespace meta {
 #endif
 
 #ifdef PRIM_TINYXML_VISUALSTUDIO
+#include <stdarg.h>
 inline int tixml_snprintf( char* buffer, unsigned int size,
     const char* format, ... )
 {
