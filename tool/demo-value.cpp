@@ -167,7 +167,6 @@ int main()
   C::Out()++;
 
   //You can even do horrible partially self-reflexive assignments.
-  a = a;
   a[1] = a;
   a[a] = 1;
   a[a] = a;

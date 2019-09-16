@@ -365,7 +365,6 @@ namespace PRIM_NAMESPACE
               NewStackItem->Push(Head, Left, Right, Start, Current,
                 OldCurrent, Control);
               //-----------------------------------
-              Left = Left;
               Right = Current;
               Start = 0;
               Current = 0;
@@ -393,7 +392,6 @@ namespace PRIM_NAMESPACE
                 OldCurrent, Control);
               //-----------------------------------
               Left = Current;
-              Right = Right;
               Start = 0;
               Current = 0;
               OldCurrent = 0;
